@@ -1,0 +1,3173 @@
+No terminales inútiles en la gramática
+
+    N
+
+
+Terminales no usados en la gramática
+
+    id_bool
+    t_opa_nivel2
+    ce_llave_apertura
+    ce_llave_cierre
+    ce_barra_baja
+    t_literal_booleano
+    t_literal_string
+
+
+Reglas inútiles en la gramática
+
+   97 N: %empty
+
+
+Estado 85 conflictos: 2 desplazamiento/reducción
+Estado 117 conflictos: 6 desplazamiento/reducción
+Estado 118 conflictos: 6 desplazamiento/reducción
+Estado 119 conflictos: 2 desplazamiento/reducción, 2 reducción/reducción
+Estado 149 conflictos: 3 desplazamiento/reducción
+Estado 171 conflictos: 2 desplazamiento/reducción
+Estado 172 conflictos: 2 desplazamiento/reducción
+Estado 173 conflictos: 6 desplazamiento/reducción
+Estado 174 conflictos: 6 desplazamiento/reducción
+Estado 175 conflictos: 6 desplazamiento/reducción
+Estado 176 conflictos: 6 desplazamiento/reducción
+Estado 177 conflictos: 4 desplazamiento/reducción
+Estado 178 conflictos: 4 desplazamiento/reducción
+Estado 196 conflictos: 2 reducción/reducción
+Estado 197 conflictos: 2 reducción/reducción
+
+
+Gramática
+
+    0 $accept: desc_algoritmo $end
+
+    1 desc_algoritmo: pr_algoritmo id op_composicion_secuencial cabecera_alg bloque_alg pr_falgoritmo ce_punto
+
+    2 cabecera_alg: decl_globales decl_a_f decl_ent_sal t_comentario
+
+    3 bloque_alg: bloque t_comentario
+
+    4 decl_globales: declaracion_tipo decl_globales
+    5              | declaracion_cte decl_globales
+    6              | %empty
+
+    7 decl_a_f: accion_d decl_a_f
+    8         | funcion_d decl_a_f
+    9         | %empty
+
+   10 bloque: declaraciones instrucciones
+
+   11 declaraciones: declaracion_tipo declaraciones
+   12              | declaracion_cte declaraciones
+   13              | declaracion_var declaraciones
+   14              | %empty
+
+   15 declaracion_tipo: pr_tipo lista_d_tipo pr_ftipo op_composicion_secuencial
+
+   16 declaracion_cte: pr_const lista_d_cte pr_fconst op_composicion_secuencial
+
+   17 declaracion_var: pr_var lista_d_var pr_fvar op_composicion_secuencial
+
+   18 lista_d_tipo: id simbolo_igual d_tipo op_composicion_secuencial lista_d_tipo
+   19             | %empty
+
+   20 d_tipo: pr_tupla lista_campos pr_ftupla
+   21       | pr_tabla op_inicio_array expresion_t op_subrango expresion_t op_fin_array pr_de d_tipo
+   22       | id
+   23       | expresion_t op_subrango expresion_t
+   24       | pr_ref d_tipo
+   25       | t_tipo_base
+
+   26 expresion_t: expresion
+   27            | t_literal_caracter
+
+   28 lista_campos: id op_definicion_tipo_variable d_tipo op_composicion_secuencial lista_campos
+   29             | %empty
+
+   30 lista_d_cte: id simbolo_igual t_literal op_composicion_secuencial lista_d_cte
+   31            | %empty
+
+   32 lista_d_var: lista_id op_definicion_tipo_variable d_tipo op_composicion_secuencial lista_d_var
+   33            | %empty
+
+   34 lista_id: id op_separador lista_id
+   35         | id
+
+   36 decl_ent_sal: decl_ent
+   37             | decl_ent decl_sal
+   38             | decl_sal
+
+   39 decl_ent: pr_ent lista_d_var
+
+   40 decl_sal: pr_sal lista_d_var
+
+   41 exp_b: exp_b pr_y M exp_b
+   42      | exp_b pr_o M exp_b
+   43      | pr_no exp_b
+   44      | pr_verdadero
+   45      | pr_falso
+   46      | expresion op_relacional expresion
+   47      | expresion simbolo_igual expresion
+   48      | ce_parentesis_apertura exp_b ce_parentesis_cierre
+
+   49 M: %empty
+
+   50 expresion: exp_a
+   51          | exp_b
+   52          | funcion_ll
+
+   53 exp_a: exp_a op_positivo exp_a
+   54      | exp_a op_negativo exp_a
+   55      | exp_a op_div exp_a
+   56      | exp_a op_mult exp_a
+   57      | exp_a pr_mod exp_a
+   58      | exp_a pr_div exp_a
+   59      | ce_parentesis_apertura exp_a ce_parentesis_cierre
+   60      | operando
+   61      | t_literal_entero
+   62      | t_literal_real
+   63      | op_negativo exp_a
+   64      | op_positivo exp_a
+
+   65 operando: id
+   66         | operando ce_punto operando
+   67         | operando op_inicio_array expresion op_fin_array
+   68         | operando pr_ref
+
+   69 instrucciones: instruccion op_composicion_secuencial instrucciones
+   70              | instruccion
+
+   71 instruccion: pr_continuar
+   72            | asignacion
+   73            | alternativa
+   74            | iteracion
+   75            | accion_ll
+
+   76 asignacion: operando op_asignacion expresion
+
+   77 alternativa: pr_si expresion op_entonces instrucciones lista_opciones pr_fsi
+
+   78 lista_opciones: op_si_no_si expresion op_entonces instrucciones lista_opciones
+   79               | %empty
+
+   80 iteracion: it_cota_fija
+   81          | it_cota_exp
+
+   82 it_cota_exp: pr_mientras expresion pr_hacer instrucciones pr_fmientras
+
+   83 it_cota_fija: pr_para id op_asignacion expresion pr_hasta expresion pr_hacer instrucciones pr_fpara
+
+   84 accion_d: pr_accion a_cabecera bloque pr_faccion
+
+   85 funcion_d: pr_funcion f_cabecera bloque pr_dev expresion pr_ffuncion
+
+   86 a_cabecera: id ce_parentesis_apertura d_par_form ce_parentesis_cierre op_composicion_secuencial
+
+   87 f_cabecera: id ce_parentesis_apertura lista_d_var ce_parentesis_cierre pr_dev d_tipo op_composicion_secuencial
+
+   88 d_par_form: d_p_form op_composicion_secuencial d_par_form
+   89           | %empty
+
+   90 d_p_form: pr_ent lista_id op_definicion_tipo_variable d_tipo
+   91         | pr_sal lista_id op_definicion_tipo_variable d_tipo
+   92         | pr_ent_sal lista_id op_definicion_tipo_variable d_tipo
+
+   93 accion_ll: id ce_parentesis_apertura l_ll ce_parentesis_cierre
+
+   94 funcion_ll: id ce_parentesis_apertura l_ll ce_parentesis_cierre
+
+   95 l_ll: expresion op_separador l_ll
+   96     | expresion
+
+
+Terminales con las reglas donde aparecen
+
+    $end (0) 0
+    error (256)
+    id <paraNombres> (258) 1 18 22 28 30 34 35 65 83 86 87 93 94
+    id_bool (259)
+    op_asignacion (260) 76 83
+    op_composicion_secuencial (261) 1 15 16 17 18 28 30 32 69 86 87 88
+    op_separador (262) 34 95
+    op_subrango (263) 21 23
+    op_definicion_tipo_variable (264) 28 32 90 91 92
+    op_entonces (265) 77 78
+    op_si_no_si (266) 78
+    op_inicio_array (267) 21 67
+    op_fin_array (268) 21 67
+    op_negativo (269) 54 63
+    op_positivo (270) 53 64
+    op_div (271) 55
+    op_mult (272) 56
+    op_relacional <paraOpRel> (273) 46
+    simbolo_igual <paraOpRel> (274) 18 30 47
+    pr_accion (275) 84
+    pr_algoritmo (276) 1
+    pr_const (277) 16
+    pr_continuar (278) 71
+    pr_de (279) 21
+    pr_dev (280) 85 87
+    pr_div (281) 58
+    pr_ent (282) 39 90
+    pr_ent_sal (283) 92
+    pr_faccion (284) 84
+    pr_falgoritmo (285) 1
+    pr_falso (286) 45
+    pr_fconst (287) 16
+    pr_ffuncion (288) 85
+    pr_fmientras (289) 82
+    pr_fpara (290) 83
+    pr_fsi (291) 77
+    pr_ftipo (292) 15
+    pr_ftupla (293) 20
+    pr_funcion (294) 85
+    pr_fvar (295) 17
+    pr_hacer (296) 82 83
+    pr_hasta (297) 83
+    pr_mientras (298) 82
+    pr_mod (299) 57
+    pr_no (300) 43
+    pr_o (301) 42
+    pr_para (302) 83
+    pr_ref (303) 24 68
+    pr_sal (304) 40 91
+    pr_si (305) 77
+    pr_tabla (306) 21
+    pr_tipo (307) 15
+    pr_tupla (308) 20
+    pr_var (309) 17
+    pr_verdadero (310) 44
+    pr_y (311) 41
+    t_literal_entero <paraLiterales> (312) 61
+    t_literal_real <paraLiterales> (313) 62
+    t_literal_caracter (314) 27
+    t_literal (315) 30
+    t_tipo_base <paraTipos> (316) 25
+    t_comentario (317) 2 3
+    t_opa_nivel2 (318)
+    ce_punto (319) 1 66
+    ce_parentesis_apertura (320) 48 59 86 87 93 94
+    ce_parentesis_cierre (321) 48 59 86 87 93 94
+    ce_llave_apertura (322)
+    ce_llave_cierre (323)
+    ce_barra_baja (324)
+    t_literal_booleano (325)
+    t_literal_string (326)
+
+
+No terminales con las reglas donde aparecen
+
+    $accept (72)
+        on left: 0
+    desc_algoritmo (73)
+        on left: 1
+        on right: 0
+    cabecera_alg (74)
+        on left: 2
+        on right: 1
+    bloque_alg (75)
+        on left: 3
+        on right: 1
+    decl_globales (76)
+        on left: 4 5 6
+        on right: 2 4 5
+    decl_a_f (77)
+        on left: 7 8 9
+        on right: 2 7 8
+    bloque (78)
+        on left: 10
+        on right: 3 84 85
+    declaraciones (79)
+        on left: 11 12 13 14
+        on right: 10 11 12 13
+    declaracion_tipo (80)
+        on left: 15
+        on right: 4 11
+    declaracion_cte (81)
+        on left: 16
+        on right: 5 12
+    declaracion_var (82)
+        on left: 17
+        on right: 13
+    lista_d_tipo (83)
+        on left: 18 19
+        on right: 15 18
+    d_tipo <paraTipos> (84)
+        on left: 20 21 22 23 24 25
+        on right: 18 21 24 28 32 87 90 91 92
+    expresion_t (85)
+        on left: 26 27
+        on right: 21 23
+    lista_campos (86)
+        on left: 28 29
+        on right: 20 28
+    lista_d_cte (87)
+        on left: 30 31
+        on right: 16 30
+    lista_d_var (88)
+        on left: 32 33
+        on right: 17 32 39 40 87
+    lista_id <miCola> (89)
+        on left: 34 35
+        on right: 32 34 90 91 92
+    decl_ent_sal (90)
+        on left: 36 37 38
+        on right: 2
+    decl_ent (91)
+        on left: 39
+        on right: 36 37
+    decl_sal (92)
+        on left: 40
+        on right: 37 38
+    exp_b <paraExp> (93)
+        on left: 41 42 43 44 45 46 47 48
+        on right: 41 42 43 48 51
+    M <quad> (94)
+        on left: 49
+        on right: 41 42
+    expresion <paraExp> (95)
+        on left: 50 51 52
+        on right: 26 46 47 67 76 77 78 82 83 85 95 96
+    exp_a <paraExp> (96)
+        on left: 53 54 55 56 57 58 59 60 61 62 63 64
+        on right: 50 53 54 55 56 57 58 59 63 64
+    operando <paraExp> (97)
+        on left: 65 66 67 68
+        on right: 60 66 67 68 76
+    instrucciones (98)
+        on left: 69 70
+        on right: 10 69 77 78 82 83
+    instruccion (99)
+        on left: 71 72 73 74 75
+        on right: 69 70
+    asignacion (100)
+        on left: 76
+        on right: 72
+    alternativa (101)
+        on left: 77
+        on right: 73
+    lista_opciones (102)
+        on left: 78 79
+        on right: 77 78
+    iteracion (103)
+        on left: 80 81
+        on right: 74
+    it_cota_exp (104)
+        on left: 82
+        on right: 81
+    it_cota_fija (105)
+        on left: 83
+        on right: 80
+    accion_d (106)
+        on left: 84
+        on right: 7
+    funcion_d (107)
+        on left: 85
+        on right: 8
+    a_cabecera (108)
+        on left: 86
+        on right: 84
+    f_cabecera (109)
+        on left: 87
+        on right: 85
+    d_par_form (110)
+        on left: 88 89
+        on right: 86 88
+    d_p_form (111)
+        on left: 90 91 92
+        on right: 88
+    accion_ll (112)
+        on left: 93
+        on right: 75
+    funcion_ll (113)
+        on left: 94
+        on right: 52
+    l_ll (114)
+        on left: 95 96
+        on right: 93 94 95
+
+
+Estado 0
+
+    0 $accept: . desc_algoritmo $end
+
+    pr_algoritmo  desplazar e ir al estado 1
+
+    desc_algoritmo  ir al estado 2
+
+
+Estado 1
+
+    1 desc_algoritmo: pr_algoritmo . id op_composicion_secuencial cabecera_alg bloque_alg pr_falgoritmo ce_punto
+
+    id  desplazar e ir al estado 3
+
+
+Estado 2
+
+    0 $accept: desc_algoritmo . $end
+
+    $end  desplazar e ir al estado 4
+
+
+Estado 3
+
+    1 desc_algoritmo: pr_algoritmo id . op_composicion_secuencial cabecera_alg bloque_alg pr_falgoritmo ce_punto
+
+    op_composicion_secuencial  desplazar e ir al estado 5
+
+
+Estado 4
+
+    0 $accept: desc_algoritmo $end .
+
+    $default  aceptar
+
+
+Estado 5
+
+    1 desc_algoritmo: pr_algoritmo id op_composicion_secuencial . cabecera_alg bloque_alg pr_falgoritmo ce_punto
+
+    pr_const  desplazar e ir al estado 6
+    pr_tipo   desplazar e ir al estado 7
+
+    $default  reduce usando la regla 6 (decl_globales)
+
+    cabecera_alg      ir al estado 8
+    decl_globales     ir al estado 9
+    declaracion_tipo  ir al estado 10
+    declaracion_cte   ir al estado 11
+
+
+Estado 6
+
+   16 declaracion_cte: pr_const . lista_d_cte pr_fconst op_composicion_secuencial
+
+    id  desplazar e ir al estado 12
+
+    $default  reduce usando la regla 31 (lista_d_cte)
+
+    lista_d_cte  ir al estado 13
+
+
+Estado 7
+
+   15 declaracion_tipo: pr_tipo . lista_d_tipo pr_ftipo op_composicion_secuencial
+
+    id  desplazar e ir al estado 14
+
+    $default  reduce usando la regla 19 (lista_d_tipo)
+
+    lista_d_tipo  ir al estado 15
+
+
+Estado 8
+
+    1 desc_algoritmo: pr_algoritmo id op_composicion_secuencial cabecera_alg . bloque_alg pr_falgoritmo ce_punto
+
+    pr_const  desplazar e ir al estado 6
+    pr_tipo   desplazar e ir al estado 7
+    pr_var    desplazar e ir al estado 16
+
+    $default  reduce usando la regla 14 (declaraciones)
+
+    bloque_alg        ir al estado 17
+    bloque            ir al estado 18
+    declaraciones     ir al estado 19
+    declaracion_tipo  ir al estado 20
+    declaracion_cte   ir al estado 21
+    declaracion_var   ir al estado 22
+
+
+Estado 9
+
+    2 cabecera_alg: decl_globales . decl_a_f decl_ent_sal t_comentario
+
+    pr_accion   desplazar e ir al estado 23
+    pr_funcion  desplazar e ir al estado 24
+
+    $default  reduce usando la regla 9 (decl_a_f)
+
+    decl_a_f   ir al estado 25
+    accion_d   ir al estado 26
+    funcion_d  ir al estado 27
+
+
+Estado 10
+
+    4 decl_globales: declaracion_tipo . decl_globales
+
+    pr_const  desplazar e ir al estado 6
+    pr_tipo   desplazar e ir al estado 7
+
+    $default  reduce usando la regla 6 (decl_globales)
+
+    decl_globales     ir al estado 28
+    declaracion_tipo  ir al estado 10
+    declaracion_cte   ir al estado 11
+
+
+Estado 11
+
+    5 decl_globales: declaracion_cte . decl_globales
+
+    pr_const  desplazar e ir al estado 6
+    pr_tipo   desplazar e ir al estado 7
+
+    $default  reduce usando la regla 6 (decl_globales)
+
+    decl_globales     ir al estado 29
+    declaracion_tipo  ir al estado 10
+    declaracion_cte   ir al estado 11
+
+
+Estado 12
+
+   30 lista_d_cte: id . simbolo_igual t_literal op_composicion_secuencial lista_d_cte
+
+    simbolo_igual  desplazar e ir al estado 30
+
+
+Estado 13
+
+   16 declaracion_cte: pr_const lista_d_cte . pr_fconst op_composicion_secuencial
+
+    pr_fconst  desplazar e ir al estado 31
+
+
+Estado 14
+
+   18 lista_d_tipo: id . simbolo_igual d_tipo op_composicion_secuencial lista_d_tipo
+
+    simbolo_igual  desplazar e ir al estado 32
+
+
+Estado 15
+
+   15 declaracion_tipo: pr_tipo lista_d_tipo . pr_ftipo op_composicion_secuencial
+
+    pr_ftipo  desplazar e ir al estado 33
+
+
+Estado 16
+
+   17 declaracion_var: pr_var . lista_d_var pr_fvar op_composicion_secuencial
+
+    id  desplazar e ir al estado 34
+
+    $default  reduce usando la regla 33 (lista_d_var)
+
+    lista_d_var  ir al estado 35
+    lista_id     ir al estado 36
+
+
+Estado 17
+
+    1 desc_algoritmo: pr_algoritmo id op_composicion_secuencial cabecera_alg bloque_alg . pr_falgoritmo ce_punto
+
+    pr_falgoritmo  desplazar e ir al estado 37
+
+
+Estado 18
+
+    3 bloque_alg: bloque . t_comentario
+
+    t_comentario  desplazar e ir al estado 38
+
+
+Estado 19
+
+   10 bloque: declaraciones . instrucciones
+
+    id            desplazar e ir al estado 39
+    pr_continuar  desplazar e ir al estado 40
+    pr_mientras   desplazar e ir al estado 41
+    pr_para       desplazar e ir al estado 42
+    pr_si         desplazar e ir al estado 43
+
+    operando       ir al estado 44
+    instrucciones  ir al estado 45
+    instruccion    ir al estado 46
+    asignacion     ir al estado 47
+    alternativa    ir al estado 48
+    iteracion      ir al estado 49
+    it_cota_exp    ir al estado 50
+    it_cota_fija   ir al estado 51
+    accion_ll      ir al estado 52
+
+
+Estado 20
+
+   11 declaraciones: declaracion_tipo . declaraciones
+
+    pr_const  desplazar e ir al estado 6
+    pr_tipo   desplazar e ir al estado 7
+    pr_var    desplazar e ir al estado 16
+
+    $default  reduce usando la regla 14 (declaraciones)
+
+    declaraciones     ir al estado 53
+    declaracion_tipo  ir al estado 20
+    declaracion_cte   ir al estado 21
+    declaracion_var   ir al estado 22
+
+
+Estado 21
+
+   12 declaraciones: declaracion_cte . declaraciones
+
+    pr_const  desplazar e ir al estado 6
+    pr_tipo   desplazar e ir al estado 7
+    pr_var    desplazar e ir al estado 16
+
+    $default  reduce usando la regla 14 (declaraciones)
+
+    declaraciones     ir al estado 54
+    declaracion_tipo  ir al estado 20
+    declaracion_cte   ir al estado 21
+    declaracion_var   ir al estado 22
+
+
+Estado 22
+
+   13 declaraciones: declaracion_var . declaraciones
+
+    pr_const  desplazar e ir al estado 6
+    pr_tipo   desplazar e ir al estado 7
+    pr_var    desplazar e ir al estado 16
+
+    $default  reduce usando la regla 14 (declaraciones)
+
+    declaraciones     ir al estado 55
+    declaracion_tipo  ir al estado 20
+    declaracion_cte   ir al estado 21
+    declaracion_var   ir al estado 22
+
+
+Estado 23
+
+   84 accion_d: pr_accion . a_cabecera bloque pr_faccion
+
+    id  desplazar e ir al estado 56
+
+    a_cabecera  ir al estado 57
+
+
+Estado 24
+
+   85 funcion_d: pr_funcion . f_cabecera bloque pr_dev expresion pr_ffuncion
+
+    id  desplazar e ir al estado 58
+
+    f_cabecera  ir al estado 59
+
+
+Estado 25
+
+    2 cabecera_alg: decl_globales decl_a_f . decl_ent_sal t_comentario
+
+    pr_ent  desplazar e ir al estado 60
+    pr_sal  desplazar e ir al estado 61
+
+    decl_ent_sal  ir al estado 62
+    decl_ent      ir al estado 63
+    decl_sal      ir al estado 64
+
+
+Estado 26
+
+    7 decl_a_f: accion_d . decl_a_f
+
+    pr_accion   desplazar e ir al estado 23
+    pr_funcion  desplazar e ir al estado 24
+
+    $default  reduce usando la regla 9 (decl_a_f)
+
+    decl_a_f   ir al estado 65
+    accion_d   ir al estado 26
+    funcion_d  ir al estado 27
+
+
+Estado 27
+
+    8 decl_a_f: funcion_d . decl_a_f
+
+    pr_accion   desplazar e ir al estado 23
+    pr_funcion  desplazar e ir al estado 24
+
+    $default  reduce usando la regla 9 (decl_a_f)
+
+    decl_a_f   ir al estado 66
+    accion_d   ir al estado 26
+    funcion_d  ir al estado 27
+
+
+Estado 28
+
+    4 decl_globales: declaracion_tipo decl_globales .
+
+    $default  reduce usando la regla 4 (decl_globales)
+
+
+Estado 29
+
+    5 decl_globales: declaracion_cte decl_globales .
+
+    $default  reduce usando la regla 5 (decl_globales)
+
+
+Estado 30
+
+   30 lista_d_cte: id simbolo_igual . t_literal op_composicion_secuencial lista_d_cte
+
+    t_literal  desplazar e ir al estado 67
+
+
+Estado 31
+
+   16 declaracion_cte: pr_const lista_d_cte pr_fconst . op_composicion_secuencial
+
+    op_composicion_secuencial  desplazar e ir al estado 68
+
+
+Estado 32
+
+   18 lista_d_tipo: id simbolo_igual . d_tipo op_composicion_secuencial lista_d_tipo
+
+    id                      desplazar e ir al estado 69
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_ref                  desplazar e ir al estado 74
+    pr_tabla                desplazar e ir al estado 75
+    pr_tupla                desplazar e ir al estado 76
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    t_tipo_base             desplazar e ir al estado 81
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    d_tipo       ir al estado 83
+    expresion_t  ir al estado 84
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 33
+
+   15 declaracion_tipo: pr_tipo lista_d_tipo pr_ftipo . op_composicion_secuencial
+
+    op_composicion_secuencial  desplazar e ir al estado 90
+
+
+Estado 34
+
+   34 lista_id: id . op_separador lista_id
+   35         | id .
+
+    op_separador  desplazar e ir al estado 91
+
+    $default  reduce usando la regla 35 (lista_id)
+
+
+Estado 35
+
+   17 declaracion_var: pr_var lista_d_var . pr_fvar op_composicion_secuencial
+
+    pr_fvar  desplazar e ir al estado 92
+
+
+Estado 36
+
+   32 lista_d_var: lista_id . op_definicion_tipo_variable d_tipo op_composicion_secuencial lista_d_var
+
+    op_definicion_tipo_variable  desplazar e ir al estado 93
+
+
+Estado 37
+
+    1 desc_algoritmo: pr_algoritmo id op_composicion_secuencial cabecera_alg bloque_alg pr_falgoritmo . ce_punto
+
+    ce_punto  desplazar e ir al estado 94
+
+
+Estado 38
+
+    3 bloque_alg: bloque t_comentario .
+
+    $default  reduce usando la regla 3 (bloque_alg)
+
+
+Estado 39
+
+   65 operando: id .
+   93 accion_ll: id . ce_parentesis_apertura l_ll ce_parentesis_cierre
+
+    ce_parentesis_apertura  desplazar e ir al estado 95
+
+    $default  reduce usando la regla 65 (operando)
+
+
+Estado 40
+
+   71 instruccion: pr_continuar .
+
+    $default  reduce usando la regla 71 (instruccion)
+
+
+Estado 41
+
+   82 it_cota_exp: pr_mientras . expresion pr_hacer instrucciones pr_fmientras
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 97
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 42
+
+   83 it_cota_fija: pr_para . id op_asignacion expresion pr_hasta expresion pr_hacer instrucciones pr_fpara
+
+    id  desplazar e ir al estado 98
+
+
+Estado 43
+
+   77 alternativa: pr_si . expresion op_entonces instrucciones lista_opciones pr_fsi
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 99
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 44
+
+   66 operando: operando . ce_punto operando
+   67         | operando . op_inicio_array expresion op_fin_array
+   68         | operando . pr_ref
+   76 asignacion: operando . op_asignacion expresion
+
+    op_asignacion    desplazar e ir al estado 100
+    op_inicio_array  desplazar e ir al estado 101
+    pr_ref           desplazar e ir al estado 102
+    ce_punto         desplazar e ir al estado 103
+
+
+Estado 45
+
+   10 bloque: declaraciones instrucciones .
+
+    $default  reduce usando la regla 10 (bloque)
+
+
+Estado 46
+
+   69 instrucciones: instruccion . op_composicion_secuencial instrucciones
+   70              | instruccion .
+
+    op_composicion_secuencial  desplazar e ir al estado 104
+
+    $default  reduce usando la regla 70 (instrucciones)
+
+
+Estado 47
+
+   72 instruccion: asignacion .
+
+    $default  reduce usando la regla 72 (instruccion)
+
+
+Estado 48
+
+   73 instruccion: alternativa .
+
+    $default  reduce usando la regla 73 (instruccion)
+
+
+Estado 49
+
+   74 instruccion: iteracion .
+
+    $default  reduce usando la regla 74 (instruccion)
+
+
+Estado 50
+
+   81 iteracion: it_cota_exp .
+
+    $default  reduce usando la regla 81 (iteracion)
+
+
+Estado 51
+
+   80 iteracion: it_cota_fija .
+
+    $default  reduce usando la regla 80 (iteracion)
+
+
+Estado 52
+
+   75 instruccion: accion_ll .
+
+    $default  reduce usando la regla 75 (instruccion)
+
+
+Estado 53
+
+   11 declaraciones: declaracion_tipo declaraciones .
+
+    $default  reduce usando la regla 11 (declaraciones)
+
+
+Estado 54
+
+   12 declaraciones: declaracion_cte declaraciones .
+
+    $default  reduce usando la regla 12 (declaraciones)
+
+
+Estado 55
+
+   13 declaraciones: declaracion_var declaraciones .
+
+    $default  reduce usando la regla 13 (declaraciones)
+
+
+Estado 56
+
+   86 a_cabecera: id . ce_parentesis_apertura d_par_form ce_parentesis_cierre op_composicion_secuencial
+
+    ce_parentesis_apertura  desplazar e ir al estado 105
+
+
+Estado 57
+
+   84 accion_d: pr_accion a_cabecera . bloque pr_faccion
+
+    pr_const  desplazar e ir al estado 6
+    pr_tipo   desplazar e ir al estado 7
+    pr_var    desplazar e ir al estado 16
+
+    $default  reduce usando la regla 14 (declaraciones)
+
+    bloque            ir al estado 106
+    declaraciones     ir al estado 19
+    declaracion_tipo  ir al estado 20
+    declaracion_cte   ir al estado 21
+    declaracion_var   ir al estado 22
+
+
+Estado 58
+
+   87 f_cabecera: id . ce_parentesis_apertura lista_d_var ce_parentesis_cierre pr_dev d_tipo op_composicion_secuencial
+
+    ce_parentesis_apertura  desplazar e ir al estado 107
+
+
+Estado 59
+
+   85 funcion_d: pr_funcion f_cabecera . bloque pr_dev expresion pr_ffuncion
+
+    pr_const  desplazar e ir al estado 6
+    pr_tipo   desplazar e ir al estado 7
+    pr_var    desplazar e ir al estado 16
+
+    $default  reduce usando la regla 14 (declaraciones)
+
+    bloque            ir al estado 108
+    declaraciones     ir al estado 19
+    declaracion_tipo  ir al estado 20
+    declaracion_cte   ir al estado 21
+    declaracion_var   ir al estado 22
+
+
+Estado 60
+
+   39 decl_ent: pr_ent . lista_d_var
+
+    id  desplazar e ir al estado 34
+
+    $default  reduce usando la regla 33 (lista_d_var)
+
+    lista_d_var  ir al estado 109
+    lista_id     ir al estado 36
+
+
+Estado 61
+
+   40 decl_sal: pr_sal . lista_d_var
+
+    id  desplazar e ir al estado 34
+
+    $default  reduce usando la regla 33 (lista_d_var)
+
+    lista_d_var  ir al estado 110
+    lista_id     ir al estado 36
+
+
+Estado 62
+
+    2 cabecera_alg: decl_globales decl_a_f decl_ent_sal . t_comentario
+
+    t_comentario  desplazar e ir al estado 111
+
+
+Estado 63
+
+   36 decl_ent_sal: decl_ent .
+   37             | decl_ent . decl_sal
+
+    pr_sal  desplazar e ir al estado 61
+
+    $default  reduce usando la regla 36 (decl_ent_sal)
+
+    decl_sal  ir al estado 112
+
+
+Estado 64
+
+   38 decl_ent_sal: decl_sal .
+
+    $default  reduce usando la regla 38 (decl_ent_sal)
+
+
+Estado 65
+
+    7 decl_a_f: accion_d decl_a_f .
+
+    $default  reduce usando la regla 7 (decl_a_f)
+
+
+Estado 66
+
+    8 decl_a_f: funcion_d decl_a_f .
+
+    $default  reduce usando la regla 8 (decl_a_f)
+
+
+Estado 67
+
+   30 lista_d_cte: id simbolo_igual t_literal . op_composicion_secuencial lista_d_cte
+
+    op_composicion_secuencial  desplazar e ir al estado 113
+
+
+Estado 68
+
+   16 declaracion_cte: pr_const lista_d_cte pr_fconst op_composicion_secuencial .
+
+    $default  reduce usando la regla 16 (declaracion_cte)
+
+
+Estado 69
+
+   22 d_tipo: id .
+   65 operando: id .
+   94 funcion_ll: id . ce_parentesis_apertura l_ll ce_parentesis_cierre
+
+    ce_parentesis_apertura  desplazar e ir al estado 114
+
+    op_composicion_secuencial  reduce usando la regla 22 (d_tipo)
+    $default                   reduce usando la regla 65 (operando)
+
+
+Estado 70
+
+   63 exp_a: op_negativo . exp_a
+
+    id                      desplazar e ir al estado 115
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 116
+
+    exp_a     ir al estado 117
+    operando  ir al estado 88
+
+
+Estado 71
+
+   64 exp_a: op_positivo . exp_a
+
+    id                      desplazar e ir al estado 115
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 116
+
+    exp_a     ir al estado 118
+    operando  ir al estado 88
+
+
+Estado 72
+
+   45 exp_b: pr_falso .
+
+    $default  reduce usando la regla 45 (exp_b)
+
+
+Estado 73
+
+   43 exp_b: pr_no . exp_b
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 119
+    expresion   ir al estado 120
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 74
+
+   24 d_tipo: pr_ref . d_tipo
+
+    id                      desplazar e ir al estado 69
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_ref                  desplazar e ir al estado 74
+    pr_tabla                desplazar e ir al estado 75
+    pr_tupla                desplazar e ir al estado 76
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    t_tipo_base             desplazar e ir al estado 81
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    d_tipo       ir al estado 121
+    expresion_t  ir al estado 84
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 75
+
+   21 d_tipo: pr_tabla . op_inicio_array expresion_t op_subrango expresion_t op_fin_array pr_de d_tipo
+
+    op_inicio_array  desplazar e ir al estado 122
+
+
+Estado 76
+
+   20 d_tipo: pr_tupla . lista_campos pr_ftupla
+
+    id  desplazar e ir al estado 123
+
+    $default  reduce usando la regla 29 (lista_campos)
+
+    lista_campos  ir al estado 124
+
+
+Estado 77
+
+   44 exp_b: pr_verdadero .
+
+    $default  reduce usando la regla 44 (exp_b)
+
+
+Estado 78
+
+   61 exp_a: t_literal_entero .
+
+    $default  reduce usando la regla 61 (exp_a)
+
+
+Estado 79
+
+   62 exp_a: t_literal_real .
+
+    $default  reduce usando la regla 62 (exp_a)
+
+
+Estado 80
+
+   27 expresion_t: t_literal_caracter .
+
+    $default  reduce usando la regla 27 (expresion_t)
+
+
+Estado 81
+
+   25 d_tipo: t_tipo_base .
+
+    $default  reduce usando la regla 25 (d_tipo)
+
+
+Estado 82
+
+   48 exp_b: ce_parentesis_apertura . exp_b ce_parentesis_cierre
+   59 exp_a: ce_parentesis_apertura . exp_a ce_parentesis_cierre
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 125
+    expresion   ir al estado 120
+    exp_a       ir al estado 126
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 83
+
+   18 lista_d_tipo: id simbolo_igual d_tipo . op_composicion_secuencial lista_d_tipo
+
+    op_composicion_secuencial  desplazar e ir al estado 127
+
+
+Estado 84
+
+   23 d_tipo: expresion_t . op_subrango expresion_t
+
+    op_subrango  desplazar e ir al estado 128
+
+
+Estado 85
+
+   41 exp_b: exp_b . pr_y M exp_b
+   42      | exp_b . pr_o M exp_b
+   51 expresion: exp_b .
+
+    pr_o  desplazar e ir al estado 129
+    pr_y  desplazar e ir al estado 130
+
+    pr_o      [reduce usando la regla 51 (expresion)]
+    pr_y      [reduce usando la regla 51 (expresion)]
+    $default  reduce usando la regla 51 (expresion)
+
+
+Estado 86
+
+   26 expresion_t: expresion .
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+
+    $default  reduce usando la regla 26 (expresion_t)
+
+
+Estado 87
+
+   50 expresion: exp_a .
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+
+    op_negativo  desplazar e ir al estado 133
+    op_positivo  desplazar e ir al estado 134
+    op_div       desplazar e ir al estado 135
+    op_mult      desplazar e ir al estado 136
+    pr_div       desplazar e ir al estado 137
+    pr_mod       desplazar e ir al estado 138
+
+    $default  reduce usando la regla 50 (expresion)
+
+
+Estado 88
+
+   60 exp_a: operando .
+   66 operando: operando . ce_punto operando
+   67         | operando . op_inicio_array expresion op_fin_array
+   68         | operando . pr_ref
+
+    op_inicio_array  desplazar e ir al estado 101
+    pr_ref           desplazar e ir al estado 102
+    ce_punto         desplazar e ir al estado 103
+
+    $default  reduce usando la regla 60 (exp_a)
+
+
+Estado 89
+
+   52 expresion: funcion_ll .
+
+    $default  reduce usando la regla 52 (expresion)
+
+
+Estado 90
+
+   15 declaracion_tipo: pr_tipo lista_d_tipo pr_ftipo op_composicion_secuencial .
+
+    $default  reduce usando la regla 15 (declaracion_tipo)
+
+
+Estado 91
+
+   34 lista_id: id op_separador . lista_id
+
+    id  desplazar e ir al estado 34
+
+    lista_id  ir al estado 139
+
+
+Estado 92
+
+   17 declaracion_var: pr_var lista_d_var pr_fvar . op_composicion_secuencial
+
+    op_composicion_secuencial  desplazar e ir al estado 140
+
+
+Estado 93
+
+   32 lista_d_var: lista_id op_definicion_tipo_variable . d_tipo op_composicion_secuencial lista_d_var
+
+    id                      desplazar e ir al estado 69
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_ref                  desplazar e ir al estado 74
+    pr_tabla                desplazar e ir al estado 75
+    pr_tupla                desplazar e ir al estado 76
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    t_tipo_base             desplazar e ir al estado 81
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    d_tipo       ir al estado 141
+    expresion_t  ir al estado 84
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 94
+
+    1 desc_algoritmo: pr_algoritmo id op_composicion_secuencial cabecera_alg bloque_alg pr_falgoritmo ce_punto .
+
+    $default  reduce usando la regla 1 (desc_algoritmo)
+
+
+Estado 95
+
+   93 accion_ll: id ce_parentesis_apertura . l_ll ce_parentesis_cierre
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 142
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+    l_ll        ir al estado 143
+
+
+Estado 96
+
+   65 operando: id .
+   94 funcion_ll: id . ce_parentesis_apertura l_ll ce_parentesis_cierre
+
+    ce_parentesis_apertura  desplazar e ir al estado 114
+
+    $default  reduce usando la regla 65 (operando)
+
+
+Estado 97
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   82 it_cota_exp: pr_mientras expresion . pr_hacer instrucciones pr_fmientras
+
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+    pr_hacer       desplazar e ir al estado 144
+
+
+Estado 98
+
+   83 it_cota_fija: pr_para id . op_asignacion expresion pr_hasta expresion pr_hacer instrucciones pr_fpara
+
+    op_asignacion  desplazar e ir al estado 145
+
+
+Estado 99
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   77 alternativa: pr_si expresion . op_entonces instrucciones lista_opciones pr_fsi
+
+    op_entonces    desplazar e ir al estado 146
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+
+
+Estado 100
+
+   76 asignacion: operando op_asignacion . expresion
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 147
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 101
+
+   67 operando: operando op_inicio_array . expresion op_fin_array
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 148
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 102
+
+   68 operando: operando pr_ref .
+
+    $default  reduce usando la regla 68 (operando)
+
+
+Estado 103
+
+   66 operando: operando ce_punto . operando
+
+    id  desplazar e ir al estado 115
+
+    operando  ir al estado 149
+
+
+Estado 104
+
+   69 instrucciones: instruccion op_composicion_secuencial . instrucciones
+
+    id            desplazar e ir al estado 39
+    pr_continuar  desplazar e ir al estado 40
+    pr_mientras   desplazar e ir al estado 41
+    pr_para       desplazar e ir al estado 42
+    pr_si         desplazar e ir al estado 43
+
+    operando       ir al estado 44
+    instrucciones  ir al estado 150
+    instruccion    ir al estado 46
+    asignacion     ir al estado 47
+    alternativa    ir al estado 48
+    iteracion      ir al estado 49
+    it_cota_exp    ir al estado 50
+    it_cota_fija   ir al estado 51
+    accion_ll      ir al estado 52
+
+
+Estado 105
+
+   86 a_cabecera: id ce_parentesis_apertura . d_par_form ce_parentesis_cierre op_composicion_secuencial
+
+    pr_ent      desplazar e ir al estado 151
+    pr_ent_sal  desplazar e ir al estado 152
+    pr_sal      desplazar e ir al estado 153
+
+    $default  reduce usando la regla 89 (d_par_form)
+
+    d_par_form  ir al estado 154
+    d_p_form    ir al estado 155
+
+
+Estado 106
+
+   84 accion_d: pr_accion a_cabecera bloque . pr_faccion
+
+    pr_faccion  desplazar e ir al estado 156
+
+
+Estado 107
+
+   87 f_cabecera: id ce_parentesis_apertura . lista_d_var ce_parentesis_cierre pr_dev d_tipo op_composicion_secuencial
+
+    id  desplazar e ir al estado 34
+
+    $default  reduce usando la regla 33 (lista_d_var)
+
+    lista_d_var  ir al estado 157
+    lista_id     ir al estado 36
+
+
+Estado 108
+
+   85 funcion_d: pr_funcion f_cabecera bloque . pr_dev expresion pr_ffuncion
+
+    pr_dev  desplazar e ir al estado 158
+
+
+Estado 109
+
+   39 decl_ent: pr_ent lista_d_var .
+
+    $default  reduce usando la regla 39 (decl_ent)
+
+
+Estado 110
+
+   40 decl_sal: pr_sal lista_d_var .
+
+    $default  reduce usando la regla 40 (decl_sal)
+
+
+Estado 111
+
+    2 cabecera_alg: decl_globales decl_a_f decl_ent_sal t_comentario .
+
+    $default  reduce usando la regla 2 (cabecera_alg)
+
+
+Estado 112
+
+   37 decl_ent_sal: decl_ent decl_sal .
+
+    $default  reduce usando la regla 37 (decl_ent_sal)
+
+
+Estado 113
+
+   30 lista_d_cte: id simbolo_igual t_literal op_composicion_secuencial . lista_d_cte
+
+    id  desplazar e ir al estado 12
+
+    $default  reduce usando la regla 31 (lista_d_cte)
+
+    lista_d_cte  ir al estado 159
+
+
+Estado 114
+
+   94 funcion_ll: id ce_parentesis_apertura . l_ll ce_parentesis_cierre
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 142
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+    l_ll        ir al estado 160
+
+
+Estado 115
+
+   65 operando: id .
+
+    $default  reduce usando la regla 65 (operando)
+
+
+Estado 116
+
+   59 exp_a: ce_parentesis_apertura . exp_a ce_parentesis_cierre
+
+    id                      desplazar e ir al estado 115
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 116
+
+    exp_a     ir al estado 161
+    operando  ir al estado 88
+
+
+Estado 117
+
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+   63      | op_negativo exp_a .
+
+    op_negativo  desplazar e ir al estado 133
+    op_positivo  desplazar e ir al estado 134
+    op_div       desplazar e ir al estado 135
+    op_mult      desplazar e ir al estado 136
+    pr_div       desplazar e ir al estado 137
+    pr_mod       desplazar e ir al estado 138
+
+    op_negativo  [reduce usando la regla 63 (exp_a)]
+    op_positivo  [reduce usando la regla 63 (exp_a)]
+    op_div       [reduce usando la regla 63 (exp_a)]
+    op_mult      [reduce usando la regla 63 (exp_a)]
+    pr_div       [reduce usando la regla 63 (exp_a)]
+    pr_mod       [reduce usando la regla 63 (exp_a)]
+    $default     reduce usando la regla 63 (exp_a)
+
+
+Estado 118
+
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+   64      | op_positivo exp_a .
+
+    op_negativo  desplazar e ir al estado 133
+    op_positivo  desplazar e ir al estado 134
+    op_div       desplazar e ir al estado 135
+    op_mult      desplazar e ir al estado 136
+    pr_div       desplazar e ir al estado 137
+    pr_mod       desplazar e ir al estado 138
+
+    op_negativo  [reduce usando la regla 64 (exp_a)]
+    op_positivo  [reduce usando la regla 64 (exp_a)]
+    op_div       [reduce usando la regla 64 (exp_a)]
+    op_mult      [reduce usando la regla 64 (exp_a)]
+    pr_div       [reduce usando la regla 64 (exp_a)]
+    pr_mod       [reduce usando la regla 64 (exp_a)]
+    $default     reduce usando la regla 64 (exp_a)
+
+
+Estado 119
+
+   41 exp_b: exp_b . pr_y M exp_b
+   42      | exp_b . pr_o M exp_b
+   43      | pr_no exp_b .
+   51 expresion: exp_b .
+
+    pr_o  desplazar e ir al estado 129
+    pr_y  desplazar e ir al estado 130
+
+    op_relacional  reduce usando la regla 43 (exp_b)
+    op_relacional  [reduce usando la regla 51 (expresion)]
+    simbolo_igual  reduce usando la regla 43 (exp_b)
+    simbolo_igual  [reduce usando la regla 51 (expresion)]
+    pr_o           [reduce usando la regla 43 (exp_b)]
+    pr_y           [reduce usando la regla 43 (exp_b)]
+    $default       reduce usando la regla 43 (exp_b)
+
+
+Estado 120
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+
+
+Estado 121
+
+   24 d_tipo: pr_ref d_tipo .
+
+    $default  reduce usando la regla 24 (d_tipo)
+
+
+Estado 122
+
+   21 d_tipo: pr_tabla op_inicio_array . expresion_t op_subrango expresion_t op_fin_array pr_de d_tipo
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    expresion_t  ir al estado 162
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 123
+
+   28 lista_campos: id . op_definicion_tipo_variable d_tipo op_composicion_secuencial lista_campos
+
+    op_definicion_tipo_variable  desplazar e ir al estado 163
+
+
+Estado 124
+
+   20 d_tipo: pr_tupla lista_campos . pr_ftupla
+
+    pr_ftupla  desplazar e ir al estado 164
+
+
+Estado 125
+
+   41 exp_b: exp_b . pr_y M exp_b
+   42      | exp_b . pr_o M exp_b
+   48      | ce_parentesis_apertura exp_b . ce_parentesis_cierre
+   51 expresion: exp_b .
+
+    pr_o                  desplazar e ir al estado 129
+    pr_y                  desplazar e ir al estado 130
+    ce_parentesis_cierre  desplazar e ir al estado 165
+
+    $default  reduce usando la regla 51 (expresion)
+
+
+Estado 126
+
+   50 expresion: exp_a .
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+   59      | ce_parentesis_apertura exp_a . ce_parentesis_cierre
+
+    op_negativo           desplazar e ir al estado 133
+    op_positivo           desplazar e ir al estado 134
+    op_div                desplazar e ir al estado 135
+    op_mult               desplazar e ir al estado 136
+    pr_div                desplazar e ir al estado 137
+    pr_mod                desplazar e ir al estado 138
+    ce_parentesis_cierre  desplazar e ir al estado 166
+
+    $default  reduce usando la regla 50 (expresion)
+
+
+Estado 127
+
+   18 lista_d_tipo: id simbolo_igual d_tipo op_composicion_secuencial . lista_d_tipo
+
+    id  desplazar e ir al estado 14
+
+    $default  reduce usando la regla 19 (lista_d_tipo)
+
+    lista_d_tipo  ir al estado 167
+
+
+Estado 128
+
+   23 d_tipo: expresion_t op_subrango . expresion_t
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    expresion_t  ir al estado 168
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 129
+
+   42 exp_b: exp_b pr_o . M exp_b
+
+    $default  reduce usando la regla 49 (M)
+
+    M  ir al estado 169
+
+
+Estado 130
+
+   41 exp_b: exp_b pr_y . M exp_b
+
+    $default  reduce usando la regla 49 (M)
+
+    M  ir al estado 170
+
+
+Estado 131
+
+   46 exp_b: expresion op_relacional . expresion
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 171
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 132
+
+   47 exp_b: expresion simbolo_igual . expresion
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 172
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 133
+
+   54 exp_a: exp_a op_negativo . exp_a
+
+    id                      desplazar e ir al estado 115
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 116
+
+    exp_a     ir al estado 173
+    operando  ir al estado 88
+
+
+Estado 134
+
+   53 exp_a: exp_a op_positivo . exp_a
+
+    id                      desplazar e ir al estado 115
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 116
+
+    exp_a     ir al estado 174
+    operando  ir al estado 88
+
+
+Estado 135
+
+   55 exp_a: exp_a op_div . exp_a
+
+    id                      desplazar e ir al estado 115
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 116
+
+    exp_a     ir al estado 175
+    operando  ir al estado 88
+
+
+Estado 136
+
+   56 exp_a: exp_a op_mult . exp_a
+
+    id                      desplazar e ir al estado 115
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 116
+
+    exp_a     ir al estado 176
+    operando  ir al estado 88
+
+
+Estado 137
+
+   58 exp_a: exp_a pr_div . exp_a
+
+    id                      desplazar e ir al estado 115
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 116
+
+    exp_a     ir al estado 177
+    operando  ir al estado 88
+
+
+Estado 138
+
+   57 exp_a: exp_a pr_mod . exp_a
+
+    id                      desplazar e ir al estado 115
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 116
+
+    exp_a     ir al estado 178
+    operando  ir al estado 88
+
+
+Estado 139
+
+   34 lista_id: id op_separador lista_id .
+
+    $default  reduce usando la regla 34 (lista_id)
+
+
+Estado 140
+
+   17 declaracion_var: pr_var lista_d_var pr_fvar op_composicion_secuencial .
+
+    $default  reduce usando la regla 17 (declaracion_var)
+
+
+Estado 141
+
+   32 lista_d_var: lista_id op_definicion_tipo_variable d_tipo . op_composicion_secuencial lista_d_var
+
+    op_composicion_secuencial  desplazar e ir al estado 179
+
+
+Estado 142
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   95 l_ll: expresion . op_separador l_ll
+   96     | expresion .
+
+    op_separador   desplazar e ir al estado 180
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+
+    $default  reduce usando la regla 96 (l_ll)
+
+
+Estado 143
+
+   93 accion_ll: id ce_parentesis_apertura l_ll . ce_parentesis_cierre
+
+    ce_parentesis_cierre  desplazar e ir al estado 181
+
+
+Estado 144
+
+   82 it_cota_exp: pr_mientras expresion pr_hacer . instrucciones pr_fmientras
+
+    id            desplazar e ir al estado 39
+    pr_continuar  desplazar e ir al estado 40
+    pr_mientras   desplazar e ir al estado 41
+    pr_para       desplazar e ir al estado 42
+    pr_si         desplazar e ir al estado 43
+
+    operando       ir al estado 44
+    instrucciones  ir al estado 182
+    instruccion    ir al estado 46
+    asignacion     ir al estado 47
+    alternativa    ir al estado 48
+    iteracion      ir al estado 49
+    it_cota_exp    ir al estado 50
+    it_cota_fija   ir al estado 51
+    accion_ll      ir al estado 52
+
+
+Estado 145
+
+   83 it_cota_fija: pr_para id op_asignacion . expresion pr_hasta expresion pr_hacer instrucciones pr_fpara
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 183
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 146
+
+   77 alternativa: pr_si expresion op_entonces . instrucciones lista_opciones pr_fsi
+
+    id            desplazar e ir al estado 39
+    pr_continuar  desplazar e ir al estado 40
+    pr_mientras   desplazar e ir al estado 41
+    pr_para       desplazar e ir al estado 42
+    pr_si         desplazar e ir al estado 43
+
+    operando       ir al estado 44
+    instrucciones  ir al estado 184
+    instruccion    ir al estado 46
+    asignacion     ir al estado 47
+    alternativa    ir al estado 48
+    iteracion      ir al estado 49
+    it_cota_exp    ir al estado 50
+    it_cota_fija   ir al estado 51
+    accion_ll      ir al estado 52
+
+
+Estado 147
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   76 asignacion: operando op_asignacion expresion .
+
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+
+    $default  reduce usando la regla 76 (asignacion)
+
+
+Estado 148
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   67 operando: operando op_inicio_array expresion . op_fin_array
+
+    op_fin_array   desplazar e ir al estado 185
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+
+
+Estado 149
+
+   66 operando: operando . ce_punto operando
+   66         | operando ce_punto operando .
+   67         | operando . op_inicio_array expresion op_fin_array
+   68         | operando . pr_ref
+
+    op_inicio_array  desplazar e ir al estado 101
+    pr_ref           desplazar e ir al estado 102
+    ce_punto         desplazar e ir al estado 103
+
+    op_inicio_array  [reduce usando la regla 66 (operando)]
+    pr_ref           [reduce usando la regla 66 (operando)]
+    ce_punto         [reduce usando la regla 66 (operando)]
+    $default         reduce usando la regla 66 (operando)
+
+
+Estado 150
+
+   69 instrucciones: instruccion op_composicion_secuencial instrucciones .
+
+    $default  reduce usando la regla 69 (instrucciones)
+
+
+Estado 151
+
+   90 d_p_form: pr_ent . lista_id op_definicion_tipo_variable d_tipo
+
+    id  desplazar e ir al estado 34
+
+    lista_id  ir al estado 186
+
+
+Estado 152
+
+   92 d_p_form: pr_ent_sal . lista_id op_definicion_tipo_variable d_tipo
+
+    id  desplazar e ir al estado 34
+
+    lista_id  ir al estado 187
+
+
+Estado 153
+
+   91 d_p_form: pr_sal . lista_id op_definicion_tipo_variable d_tipo
+
+    id  desplazar e ir al estado 34
+
+    lista_id  ir al estado 188
+
+
+Estado 154
+
+   86 a_cabecera: id ce_parentesis_apertura d_par_form . ce_parentesis_cierre op_composicion_secuencial
+
+    ce_parentesis_cierre  desplazar e ir al estado 189
+
+
+Estado 155
+
+   88 d_par_form: d_p_form . op_composicion_secuencial d_par_form
+
+    op_composicion_secuencial  desplazar e ir al estado 190
+
+
+Estado 156
+
+   84 accion_d: pr_accion a_cabecera bloque pr_faccion .
+
+    $default  reduce usando la regla 84 (accion_d)
+
+
+Estado 157
+
+   87 f_cabecera: id ce_parentesis_apertura lista_d_var . ce_parentesis_cierre pr_dev d_tipo op_composicion_secuencial
+
+    ce_parentesis_cierre  desplazar e ir al estado 191
+
+
+Estado 158
+
+   85 funcion_d: pr_funcion f_cabecera bloque pr_dev . expresion pr_ffuncion
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 192
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 159
+
+   30 lista_d_cte: id simbolo_igual t_literal op_composicion_secuencial lista_d_cte .
+
+    $default  reduce usando la regla 30 (lista_d_cte)
+
+
+Estado 160
+
+   94 funcion_ll: id ce_parentesis_apertura l_ll . ce_parentesis_cierre
+
+    ce_parentesis_cierre  desplazar e ir al estado 193
+
+
+Estado 161
+
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+   59      | ce_parentesis_apertura exp_a . ce_parentesis_cierre
+
+    op_negativo           desplazar e ir al estado 133
+    op_positivo           desplazar e ir al estado 134
+    op_div                desplazar e ir al estado 135
+    op_mult               desplazar e ir al estado 136
+    pr_div                desplazar e ir al estado 137
+    pr_mod                desplazar e ir al estado 138
+    ce_parentesis_cierre  desplazar e ir al estado 166
+
+
+Estado 162
+
+   21 d_tipo: pr_tabla op_inicio_array expresion_t . op_subrango expresion_t op_fin_array pr_de d_tipo
+
+    op_subrango  desplazar e ir al estado 194
+
+
+Estado 163
+
+   28 lista_campos: id op_definicion_tipo_variable . d_tipo op_composicion_secuencial lista_campos
+
+    id                      desplazar e ir al estado 69
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_ref                  desplazar e ir al estado 74
+    pr_tabla                desplazar e ir al estado 75
+    pr_tupla                desplazar e ir al estado 76
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    t_tipo_base             desplazar e ir al estado 81
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    d_tipo       ir al estado 195
+    expresion_t  ir al estado 84
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 164
+
+   20 d_tipo: pr_tupla lista_campos pr_ftupla .
+
+    $default  reduce usando la regla 20 (d_tipo)
+
+
+Estado 165
+
+   48 exp_b: ce_parentesis_apertura exp_b ce_parentesis_cierre .
+
+    $default  reduce usando la regla 48 (exp_b)
+
+
+Estado 166
+
+   59 exp_a: ce_parentesis_apertura exp_a ce_parentesis_cierre .
+
+    $default  reduce usando la regla 59 (exp_a)
+
+
+Estado 167
+
+   18 lista_d_tipo: id simbolo_igual d_tipo op_composicion_secuencial lista_d_tipo .
+
+    $default  reduce usando la regla 18 (lista_d_tipo)
+
+
+Estado 168
+
+   23 d_tipo: expresion_t op_subrango expresion_t .
+
+    $default  reduce usando la regla 23 (d_tipo)
+
+
+Estado 169
+
+   42 exp_b: exp_b pr_o M . exp_b
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 196
+    expresion   ir al estado 120
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 170
+
+   41 exp_b: exp_b pr_y M . exp_b
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 197
+    expresion   ir al estado 120
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 171
+
+   46 exp_b: expresion . op_relacional expresion
+   46      | expresion op_relacional expresion .
+   47      | expresion . simbolo_igual expresion
+
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+
+    op_relacional  [reduce usando la regla 46 (exp_b)]
+    simbolo_igual  [reduce usando la regla 46 (exp_b)]
+    $default       reduce usando la regla 46 (exp_b)
+
+
+Estado 172
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   47      | expresion simbolo_igual expresion .
+
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+
+    op_relacional  [reduce usando la regla 47 (exp_b)]
+    simbolo_igual  [reduce usando la regla 47 (exp_b)]
+    $default       reduce usando la regla 47 (exp_b)
+
+
+Estado 173
+
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   54      | exp_a op_negativo exp_a .
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+
+    op_negativo  desplazar e ir al estado 133
+    op_positivo  desplazar e ir al estado 134
+    op_div       desplazar e ir al estado 135
+    op_mult      desplazar e ir al estado 136
+    pr_div       desplazar e ir al estado 137
+    pr_mod       desplazar e ir al estado 138
+
+    op_negativo  [reduce usando la regla 54 (exp_a)]
+    op_positivo  [reduce usando la regla 54 (exp_a)]
+    op_div       [reduce usando la regla 54 (exp_a)]
+    op_mult      [reduce usando la regla 54 (exp_a)]
+    pr_div       [reduce usando la regla 54 (exp_a)]
+    pr_mod       [reduce usando la regla 54 (exp_a)]
+    $default     reduce usando la regla 54 (exp_a)
+
+
+Estado 174
+
+   53 exp_a: exp_a . op_positivo exp_a
+   53      | exp_a op_positivo exp_a .
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+
+    op_negativo  desplazar e ir al estado 133
+    op_positivo  desplazar e ir al estado 134
+    op_div       desplazar e ir al estado 135
+    op_mult      desplazar e ir al estado 136
+    pr_div       desplazar e ir al estado 137
+    pr_mod       desplazar e ir al estado 138
+
+    op_negativo  [reduce usando la regla 53 (exp_a)]
+    op_positivo  [reduce usando la regla 53 (exp_a)]
+    op_div       [reduce usando la regla 53 (exp_a)]
+    op_mult      [reduce usando la regla 53 (exp_a)]
+    pr_div       [reduce usando la regla 53 (exp_a)]
+    pr_mod       [reduce usando la regla 53 (exp_a)]
+    $default     reduce usando la regla 53 (exp_a)
+
+
+Estado 175
+
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   55      | exp_a op_div exp_a .
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+
+    op_negativo  desplazar e ir al estado 133
+    op_positivo  desplazar e ir al estado 134
+    op_div       desplazar e ir al estado 135
+    op_mult      desplazar e ir al estado 136
+    pr_div       desplazar e ir al estado 137
+    pr_mod       desplazar e ir al estado 138
+
+    op_negativo  [reduce usando la regla 55 (exp_a)]
+    op_positivo  [reduce usando la regla 55 (exp_a)]
+    op_div       [reduce usando la regla 55 (exp_a)]
+    op_mult      [reduce usando la regla 55 (exp_a)]
+    pr_div       [reduce usando la regla 55 (exp_a)]
+    pr_mod       [reduce usando la regla 55 (exp_a)]
+    $default     reduce usando la regla 55 (exp_a)
+
+
+Estado 176
+
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   56      | exp_a op_mult exp_a .
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+
+    op_negativo  desplazar e ir al estado 133
+    op_positivo  desplazar e ir al estado 134
+    op_div       desplazar e ir al estado 135
+    op_mult      desplazar e ir al estado 136
+    pr_div       desplazar e ir al estado 137
+    pr_mod       desplazar e ir al estado 138
+
+    op_negativo  [reduce usando la regla 56 (exp_a)]
+    op_positivo  [reduce usando la regla 56 (exp_a)]
+    op_div       [reduce usando la regla 56 (exp_a)]
+    op_mult      [reduce usando la regla 56 (exp_a)]
+    pr_div       [reduce usando la regla 56 (exp_a)]
+    pr_mod       [reduce usando la regla 56 (exp_a)]
+    $default     reduce usando la regla 56 (exp_a)
+
+
+Estado 177
+
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   58      | exp_a . pr_div exp_a
+   58      | exp_a pr_div exp_a .
+
+    op_negativo  desplazar e ir al estado 133
+    op_positivo  desplazar e ir al estado 134
+    op_div       desplazar e ir al estado 135
+    op_mult      desplazar e ir al estado 136
+    pr_div       desplazar e ir al estado 137
+    pr_mod       desplazar e ir al estado 138
+
+    op_negativo  [reduce usando la regla 58 (exp_a)]
+    op_positivo  [reduce usando la regla 58 (exp_a)]
+    op_div       [reduce usando la regla 58 (exp_a)]
+    op_mult      [reduce usando la regla 58 (exp_a)]
+    $default     reduce usando la regla 58 (exp_a)
+
+
+Estado 178
+
+   53 exp_a: exp_a . op_positivo exp_a
+   54      | exp_a . op_negativo exp_a
+   55      | exp_a . op_div exp_a
+   56      | exp_a . op_mult exp_a
+   57      | exp_a . pr_mod exp_a
+   57      | exp_a pr_mod exp_a .
+   58      | exp_a . pr_div exp_a
+
+    op_negativo  desplazar e ir al estado 133
+    op_positivo  desplazar e ir al estado 134
+    op_div       desplazar e ir al estado 135
+    op_mult      desplazar e ir al estado 136
+    pr_mod       desplazar e ir al estado 138
+
+    op_negativo  [reduce usando la regla 57 (exp_a)]
+    op_positivo  [reduce usando la regla 57 (exp_a)]
+    op_div       [reduce usando la regla 57 (exp_a)]
+    op_mult      [reduce usando la regla 57 (exp_a)]
+    $default     reduce usando la regla 57 (exp_a)
+
+
+Estado 179
+
+   32 lista_d_var: lista_id op_definicion_tipo_variable d_tipo op_composicion_secuencial . lista_d_var
+
+    id  desplazar e ir al estado 34
+
+    $default  reduce usando la regla 33 (lista_d_var)
+
+    lista_d_var  ir al estado 198
+    lista_id     ir al estado 36
+
+
+Estado 180
+
+   95 l_ll: expresion op_separador . l_ll
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 142
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+    l_ll        ir al estado 199
+
+
+Estado 181
+
+   93 accion_ll: id ce_parentesis_apertura l_ll ce_parentesis_cierre .
+
+    $default  reduce usando la regla 93 (accion_ll)
+
+
+Estado 182
+
+   82 it_cota_exp: pr_mientras expresion pr_hacer instrucciones . pr_fmientras
+
+    pr_fmientras  desplazar e ir al estado 200
+
+
+Estado 183
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   83 it_cota_fija: pr_para id op_asignacion expresion . pr_hasta expresion pr_hacer instrucciones pr_fpara
+
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+    pr_hasta       desplazar e ir al estado 201
+
+
+Estado 184
+
+   77 alternativa: pr_si expresion op_entonces instrucciones . lista_opciones pr_fsi
+
+    op_si_no_si  desplazar e ir al estado 202
+
+    $default  reduce usando la regla 79 (lista_opciones)
+
+    lista_opciones  ir al estado 203
+
+
+Estado 185
+
+   67 operando: operando op_inicio_array expresion op_fin_array .
+
+    $default  reduce usando la regla 67 (operando)
+
+
+Estado 186
+
+   90 d_p_form: pr_ent lista_id . op_definicion_tipo_variable d_tipo
+
+    op_definicion_tipo_variable  desplazar e ir al estado 204
+
+
+Estado 187
+
+   92 d_p_form: pr_ent_sal lista_id . op_definicion_tipo_variable d_tipo
+
+    op_definicion_tipo_variable  desplazar e ir al estado 205
+
+
+Estado 188
+
+   91 d_p_form: pr_sal lista_id . op_definicion_tipo_variable d_tipo
+
+    op_definicion_tipo_variable  desplazar e ir al estado 206
+
+
+Estado 189
+
+   86 a_cabecera: id ce_parentesis_apertura d_par_form ce_parentesis_cierre . op_composicion_secuencial
+
+    op_composicion_secuencial  desplazar e ir al estado 207
+
+
+Estado 190
+
+   88 d_par_form: d_p_form op_composicion_secuencial . d_par_form
+
+    pr_ent      desplazar e ir al estado 151
+    pr_ent_sal  desplazar e ir al estado 152
+    pr_sal      desplazar e ir al estado 153
+
+    $default  reduce usando la regla 89 (d_par_form)
+
+    d_par_form  ir al estado 208
+    d_p_form    ir al estado 155
+
+
+Estado 191
+
+   87 f_cabecera: id ce_parentesis_apertura lista_d_var ce_parentesis_cierre . pr_dev d_tipo op_composicion_secuencial
+
+    pr_dev  desplazar e ir al estado 209
+
+
+Estado 192
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   85 funcion_d: pr_funcion f_cabecera bloque pr_dev expresion . pr_ffuncion
+
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+    pr_ffuncion    desplazar e ir al estado 210
+
+
+Estado 193
+
+   94 funcion_ll: id ce_parentesis_apertura l_ll ce_parentesis_cierre .
+
+    $default  reduce usando la regla 94 (funcion_ll)
+
+
+Estado 194
+
+   21 d_tipo: pr_tabla op_inicio_array expresion_t op_subrango . expresion_t op_fin_array pr_de d_tipo
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    expresion_t  ir al estado 211
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 195
+
+   28 lista_campos: id op_definicion_tipo_variable d_tipo . op_composicion_secuencial lista_campos
+
+    op_composicion_secuencial  desplazar e ir al estado 212
+
+
+Estado 196
+
+   41 exp_b: exp_b . pr_y M exp_b
+   42      | exp_b . pr_o M exp_b
+   42      | exp_b pr_o M exp_b .
+   51 expresion: exp_b .
+
+    pr_o  desplazar e ir al estado 129
+    pr_y  desplazar e ir al estado 130
+
+    op_relacional  reduce usando la regla 42 (exp_b)
+    op_relacional  [reduce usando la regla 51 (expresion)]
+    simbolo_igual  reduce usando la regla 42 (exp_b)
+    simbolo_igual  [reduce usando la regla 51 (expresion)]
+    $default       reduce usando la regla 42 (exp_b)
+
+
+Estado 197
+
+   41 exp_b: exp_b . pr_y M exp_b
+   41      | exp_b pr_y M exp_b .
+   42      | exp_b . pr_o M exp_b
+   51 expresion: exp_b .
+
+    pr_y  desplazar e ir al estado 130
+
+    op_relacional  reduce usando la regla 41 (exp_b)
+    op_relacional  [reduce usando la regla 51 (expresion)]
+    simbolo_igual  reduce usando la regla 41 (exp_b)
+    simbolo_igual  [reduce usando la regla 51 (expresion)]
+    $default       reduce usando la regla 41 (exp_b)
+
+
+Estado 198
+
+   32 lista_d_var: lista_id op_definicion_tipo_variable d_tipo op_composicion_secuencial lista_d_var .
+
+    $default  reduce usando la regla 32 (lista_d_var)
+
+
+Estado 199
+
+   95 l_ll: expresion op_separador l_ll .
+
+    $default  reduce usando la regla 95 (l_ll)
+
+
+Estado 200
+
+   82 it_cota_exp: pr_mientras expresion pr_hacer instrucciones pr_fmientras .
+
+    $default  reduce usando la regla 82 (it_cota_exp)
+
+
+Estado 201
+
+   83 it_cota_fija: pr_para id op_asignacion expresion pr_hasta . expresion pr_hacer instrucciones pr_fpara
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 213
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 202
+
+   78 lista_opciones: op_si_no_si . expresion op_entonces instrucciones lista_opciones
+
+    id                      desplazar e ir al estado 96
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    exp_b       ir al estado 85
+    expresion   ir al estado 214
+    exp_a       ir al estado 87
+    operando    ir al estado 88
+    funcion_ll  ir al estado 89
+
+
+Estado 203
+
+   77 alternativa: pr_si expresion op_entonces instrucciones lista_opciones . pr_fsi
+
+    pr_fsi  desplazar e ir al estado 215
+
+
+Estado 204
+
+   90 d_p_form: pr_ent lista_id op_definicion_tipo_variable . d_tipo
+
+    id                      desplazar e ir al estado 69
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_ref                  desplazar e ir al estado 74
+    pr_tabla                desplazar e ir al estado 75
+    pr_tupla                desplazar e ir al estado 76
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    t_tipo_base             desplazar e ir al estado 81
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    d_tipo       ir al estado 216
+    expresion_t  ir al estado 84
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 205
+
+   92 d_p_form: pr_ent_sal lista_id op_definicion_tipo_variable . d_tipo
+
+    id                      desplazar e ir al estado 69
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_ref                  desplazar e ir al estado 74
+    pr_tabla                desplazar e ir al estado 75
+    pr_tupla                desplazar e ir al estado 76
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    t_tipo_base             desplazar e ir al estado 81
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    d_tipo       ir al estado 217
+    expresion_t  ir al estado 84
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 206
+
+   91 d_p_form: pr_sal lista_id op_definicion_tipo_variable . d_tipo
+
+    id                      desplazar e ir al estado 69
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_ref                  desplazar e ir al estado 74
+    pr_tabla                desplazar e ir al estado 75
+    pr_tupla                desplazar e ir al estado 76
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    t_tipo_base             desplazar e ir al estado 81
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    d_tipo       ir al estado 218
+    expresion_t  ir al estado 84
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 207
+
+   86 a_cabecera: id ce_parentesis_apertura d_par_form ce_parentesis_cierre op_composicion_secuencial .
+
+    $default  reduce usando la regla 86 (a_cabecera)
+
+
+Estado 208
+
+   88 d_par_form: d_p_form op_composicion_secuencial d_par_form .
+
+    $default  reduce usando la regla 88 (d_par_form)
+
+
+Estado 209
+
+   87 f_cabecera: id ce_parentesis_apertura lista_d_var ce_parentesis_cierre pr_dev . d_tipo op_composicion_secuencial
+
+    id                      desplazar e ir al estado 69
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_ref                  desplazar e ir al estado 74
+    pr_tabla                desplazar e ir al estado 75
+    pr_tupla                desplazar e ir al estado 76
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    t_tipo_base             desplazar e ir al estado 81
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    d_tipo       ir al estado 219
+    expresion_t  ir al estado 84
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 210
+
+   85 funcion_d: pr_funcion f_cabecera bloque pr_dev expresion pr_ffuncion .
+
+    $default  reduce usando la regla 85 (funcion_d)
+
+
+Estado 211
+
+   21 d_tipo: pr_tabla op_inicio_array expresion_t op_subrango expresion_t . op_fin_array pr_de d_tipo
+
+    op_fin_array  desplazar e ir al estado 220
+
+
+Estado 212
+
+   28 lista_campos: id op_definicion_tipo_variable d_tipo op_composicion_secuencial . lista_campos
+
+    id  desplazar e ir al estado 123
+
+    $default  reduce usando la regla 29 (lista_campos)
+
+    lista_campos  ir al estado 221
+
+
+Estado 213
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   83 it_cota_fija: pr_para id op_asignacion expresion pr_hasta expresion . pr_hacer instrucciones pr_fpara
+
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+    pr_hacer       desplazar e ir al estado 222
+
+
+Estado 214
+
+   46 exp_b: expresion . op_relacional expresion
+   47      | expresion . simbolo_igual expresion
+   78 lista_opciones: op_si_no_si expresion . op_entonces instrucciones lista_opciones
+
+    op_entonces    desplazar e ir al estado 223
+    op_relacional  desplazar e ir al estado 131
+    simbolo_igual  desplazar e ir al estado 132
+
+
+Estado 215
+
+   77 alternativa: pr_si expresion op_entonces instrucciones lista_opciones pr_fsi .
+
+    $default  reduce usando la regla 77 (alternativa)
+
+
+Estado 216
+
+   90 d_p_form: pr_ent lista_id op_definicion_tipo_variable d_tipo .
+
+    $default  reduce usando la regla 90 (d_p_form)
+
+
+Estado 217
+
+   92 d_p_form: pr_ent_sal lista_id op_definicion_tipo_variable d_tipo .
+
+    $default  reduce usando la regla 92 (d_p_form)
+
+
+Estado 218
+
+   91 d_p_form: pr_sal lista_id op_definicion_tipo_variable d_tipo .
+
+    $default  reduce usando la regla 91 (d_p_form)
+
+
+Estado 219
+
+   87 f_cabecera: id ce_parentesis_apertura lista_d_var ce_parentesis_cierre pr_dev d_tipo . op_composicion_secuencial
+
+    op_composicion_secuencial  desplazar e ir al estado 224
+
+
+Estado 220
+
+   21 d_tipo: pr_tabla op_inicio_array expresion_t op_subrango expresion_t op_fin_array . pr_de d_tipo
+
+    pr_de  desplazar e ir al estado 225
+
+
+Estado 221
+
+   28 lista_campos: id op_definicion_tipo_variable d_tipo op_composicion_secuencial lista_campos .
+
+    $default  reduce usando la regla 28 (lista_campos)
+
+
+Estado 222
+
+   83 it_cota_fija: pr_para id op_asignacion expresion pr_hasta expresion pr_hacer . instrucciones pr_fpara
+
+    id            desplazar e ir al estado 39
+    pr_continuar  desplazar e ir al estado 40
+    pr_mientras   desplazar e ir al estado 41
+    pr_para       desplazar e ir al estado 42
+    pr_si         desplazar e ir al estado 43
+
+    operando       ir al estado 44
+    instrucciones  ir al estado 226
+    instruccion    ir al estado 46
+    asignacion     ir al estado 47
+    alternativa    ir al estado 48
+    iteracion      ir al estado 49
+    it_cota_exp    ir al estado 50
+    it_cota_fija   ir al estado 51
+    accion_ll      ir al estado 52
+
+
+Estado 223
+
+   78 lista_opciones: op_si_no_si expresion op_entonces . instrucciones lista_opciones
+
+    id            desplazar e ir al estado 39
+    pr_continuar  desplazar e ir al estado 40
+    pr_mientras   desplazar e ir al estado 41
+    pr_para       desplazar e ir al estado 42
+    pr_si         desplazar e ir al estado 43
+
+    operando       ir al estado 44
+    instrucciones  ir al estado 227
+    instruccion    ir al estado 46
+    asignacion     ir al estado 47
+    alternativa    ir al estado 48
+    iteracion      ir al estado 49
+    it_cota_exp    ir al estado 50
+    it_cota_fija   ir al estado 51
+    accion_ll      ir al estado 52
+
+
+Estado 224
+
+   87 f_cabecera: id ce_parentesis_apertura lista_d_var ce_parentesis_cierre pr_dev d_tipo op_composicion_secuencial .
+
+    $default  reduce usando la regla 87 (f_cabecera)
+
+
+Estado 225
+
+   21 d_tipo: pr_tabla op_inicio_array expresion_t op_subrango expresion_t op_fin_array pr_de . d_tipo
+
+    id                      desplazar e ir al estado 69
+    op_negativo             desplazar e ir al estado 70
+    op_positivo             desplazar e ir al estado 71
+    pr_falso                desplazar e ir al estado 72
+    pr_no                   desplazar e ir al estado 73
+    pr_ref                  desplazar e ir al estado 74
+    pr_tabla                desplazar e ir al estado 75
+    pr_tupla                desplazar e ir al estado 76
+    pr_verdadero            desplazar e ir al estado 77
+    t_literal_entero        desplazar e ir al estado 78
+    t_literal_real          desplazar e ir al estado 79
+    t_literal_caracter      desplazar e ir al estado 80
+    t_tipo_base             desplazar e ir al estado 81
+    ce_parentesis_apertura  desplazar e ir al estado 82
+
+    d_tipo       ir al estado 228
+    expresion_t  ir al estado 84
+    exp_b        ir al estado 85
+    expresion    ir al estado 86
+    exp_a        ir al estado 87
+    operando     ir al estado 88
+    funcion_ll   ir al estado 89
+
+
+Estado 226
+
+   83 it_cota_fija: pr_para id op_asignacion expresion pr_hasta expresion pr_hacer instrucciones . pr_fpara
+
+    pr_fpara  desplazar e ir al estado 229
+
+
+Estado 227
+
+   78 lista_opciones: op_si_no_si expresion op_entonces instrucciones . lista_opciones
+
+    op_si_no_si  desplazar e ir al estado 202
+
+    $default  reduce usando la regla 79 (lista_opciones)
+
+    lista_opciones  ir al estado 230
+
+
+Estado 228
+
+   21 d_tipo: pr_tabla op_inicio_array expresion_t op_subrango expresion_t op_fin_array pr_de d_tipo .
+
+    $default  reduce usando la regla 21 (d_tipo)
+
+
+Estado 229
+
+   83 it_cota_fija: pr_para id op_asignacion expresion pr_hasta expresion pr_hacer instrucciones pr_fpara .
+
+    $default  reduce usando la regla 83 (it_cota_fija)
+
+
+Estado 230
+
+   78 lista_opciones: op_si_no_si expresion op_entonces instrucciones lista_opciones .
+
+    $default  reduce usando la regla 78 (lista_opciones)
